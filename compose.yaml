@@ -1,6 +1,6 @@
 services:
   muse-protocol:
-    image: ghcr.io/duwqijlk/muse-protocol:latest
+    image: ghcr.io/carminback/muse-protocol:latest
     container_name: muse-protocol
     restart: "no"
     command: ["sleep", "infinity"]
