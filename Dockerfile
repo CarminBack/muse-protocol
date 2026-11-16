@@ -10,5 +10,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Keep the deployed task idle until an operator explicitly starts a run.
-CMD ["sleep", "infinity"]
+# Keep the control panel idle until an operator explicitly starts a run.
+CMD ["python", "webapp.py"]

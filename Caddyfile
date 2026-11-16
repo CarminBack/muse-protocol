@@ -1,0 +1,3 @@
+muse.mewinyou.ccwu.cc {
+    reverse_proxy muse-protocol:3098
+}

@@ -3,9 +3,37 @@ services:
     image: ghcr.io/carminback/muse-protocol:latest
     container_name: muse-protocol
     restart: "no"
-    command: ["sleep", "infinity"]
+    env_file:
+      - .env
+    environment:
+      MUSE_WEB_PORT: "3098"
     volumes:
       - ./config.json:/app/config.json:ro
       - ./output:/app/output
       - ./tried_emails.txt:/app/tried_emails.txt
-    # No ports are exposed; this is an outbound-only task container.
+    networks:
+      - muse-console
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: muse-protocol-caddy
+    restart: unless-stopped
+    depends_on:
+      - muse-protocol
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - muse-console
+
+networks:
+  muse-console:
+    name: muse-console
+
+volumes:
+  caddy_data:
+  caddy_config:
