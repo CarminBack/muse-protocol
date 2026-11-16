@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.git/
+.github/
+config.json
+otp-urls.txt
+proxies.txt
+codes.txt
+tried_emails.txt
+output/
+.env

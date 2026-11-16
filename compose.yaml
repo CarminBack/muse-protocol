@@ -1,0 +1,11 @@
+services:
+  muse-protocol:
+    image: ghcr.io/duwqijlk/muse-protocol:latest
+    container_name: muse-protocol
+    restart: "no"
+    command: ["sleep", "infinity"]
+    volumes:
+      - ./config.json:/app/config.json:ro
+      - ./output:/app/output
+      - ./tried_emails.txt:/app/tried_emails.txt
+    # No ports are exposed; this is an outbound-only task container.
