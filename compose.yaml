@@ -7,8 +7,9 @@ services:
       - .env
     environment:
       MUSE_WEB_PORT: "3098"
+      MUSE_CONFIG: /app/state/config.json
     volumes:
-      - ./config.json:/app/config.json:ro
+      - ./state:/app/state
       - ./output:/app/output
       - ./tried_emails.txt:/app/tried_emails.txt
     networks:

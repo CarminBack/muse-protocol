@@ -168,7 +168,12 @@ class Handler(BaseHTTPRequestHandler):
                     current[key] = payload[key]
             current["otp_file"] = ""
             current.setdefault("invite_code", "")
-            save_config(current)
+            try:
+                save_config(current)
+            except OSError:
+                json_response(self, {"error": "配置保存失败，请检查服务器配置目录的写入权限"},
+                              HTTPStatus.INTERNAL_SERVER_ERROR)
+                return
             json_response(self, {"ok": True, **public_config()})
         elif self.path == "/api/start":
             with state_lock:

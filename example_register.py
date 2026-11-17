@@ -12,7 +12,8 @@ from musepy import caa, falco
 from musepy.client import MuseClient, MuseError, random_dob
 
 
-def load_config(path="config.json"):
+def load_config(path=None):
+    path = path or os.environ.get("MUSE_CONFIG", "config.json")
     if not os.path.exists(path):
         raise SystemExit(f"缺少配置文件 {path}，请从 config.example.json 复制并填写")
     with open(path, encoding="utf-8") as f:
