@@ -50,7 +50,13 @@ def main():
     print("[3] 发送验证码")
     c.send_otp(email)
 
-    code = otp_file and open(otp_file).read().strip() or input("输入收到的 6 位验证码: ").strip()
+    if otp_file:
+        with open(otp_file, encoding="utf-8") as stream:
+            code = stream.read().strip()
+    else:
+        # The console consumes complete stdout lines to display the OTP input.
+        print("输入收到的 6 位验证码:", flush=True)
+        code = input().strip()
 
     if cfg.get("send_caa", True):
         funnel.otp_typed(c.s)
