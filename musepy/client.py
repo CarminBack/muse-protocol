@@ -75,6 +75,7 @@ class MuseClient:
                             proxies={"http": proxy, "https": proxy} if proxy else None,
                             timeout=timeout)
         self.csrf = None
+        self.waterfall_id = None
         self.tos_content_version = None   # confirm-otp 动态返回的服务端 TOS 版本
         self.onboarding = None            # activate_session 解析出的披露结果
 
@@ -107,8 +108,11 @@ class MuseClient:
 
     def restart(self, resume=False):
         """开启注册流程，返回 csrf_token"""
+        self.waterfall_id = _uuid()
+        self.csrf = None
         r = self.s.post(BASE + "/api/auth/native/restart", impersonate=self.fp,
-                        headers=self._h(HEADERS_JSON), data=json.dumps({"resume": resume}))
+                        headers=self._h(HEADERS_JSON, {"X-Hatch-Waterfall-Id": self.waterfall_id}),
+                        data=json.dumps({"resume": resume}))
         if r.status_code != 201:
             raise MuseError(f"restart {r.status_code}: {r.text[:120]}")
         self.csrf = self._json(r).get("csrf_token")
@@ -120,8 +124,9 @@ class MuseClient:
         h = self._h(HEADERS_JSON)
         if self.csrf:
             h["X-Hatch-CSRF-Token"] = self.csrf
-            h["X-Hatch-Waterfall-Id"] = _uuid()
             h["X-Hatch-Caa-Reg-Entry-Point"] = "login_home"
+        if self.waterfall_id:
+            h["X-Hatch-Waterfall-Id"] = self.waterfall_id
         return h
 
     def send_otp(self, email):

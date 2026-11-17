@@ -38,7 +38,7 @@ def main():
     c.restart()
 
     # ---- 可选的漏斗埋点 ----
-    funnel = caa.Caa(c.fp, c.lang)
+    funnel = caa.Caa(c.fp, c.lang, waterfall_id=c.waterfall_id)
     if cfg.get("send_caa", True):
         funnel.page_shown(c.s)
         time.sleep(2)
@@ -62,7 +62,10 @@ def main():
         funnel.otp_typed(c.s)
 
     print("[4] 校验验证码")
-    c.confirm_otp(code)
+    confirmation = c.confirm_otp(code)
+    registration_state = confirmation.get("registration_state")
+    if registration_state != "completion_required":
+        raise MuseError(f"验证码校验后返回状态 {registration_state!r}，请通过官方页面继续当前流程")
 
     first = cfg.get("first_name") or "三郎"    # 名
     last = cfg.get("last_name") or "近藤"      # 姓
